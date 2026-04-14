@@ -24,7 +24,7 @@
 
 set -euo pipefail
 
-APP_NAME="iocop"
+APPNAME="iocop"
 TITLE="${1:-IOCOP Notification}"
 BODY="${2:-}"
 URGENCY="${3:-normal}"
@@ -47,7 +47,7 @@ else
 fi
 
 NOTIFY_ARGS=(
-    --app-name="$APP_NAME"
+    --app-name="$APPNAME"
     --urgency="$URGENCY"
     --icon="$ICON"
 )
@@ -56,29 +56,29 @@ if [ -n "$BODY_IMAGE" ]; then
     NOTIFY_ARGS+=(--hint="string:image-path:file://$BODY_IMAGE")
 fi
 
-while read -r sid _; do
-    [ -n "$sid" ] || continue
+while read -r SID _; do
+    [ -n "$SID" ] || continue
 
-    active="$(loginctl show-session "$sid" -p Active --value 2>/dev/null || true)"
-    remote="$(loginctl show-session "$sid" -p Remote --value 2>/dev/null || true)"
-    type="$(loginctl show-session "$sid" -p Type --value 2>/dev/null || true)"
-    class="$(loginctl show-session "$sid" -p Class --value 2>/dev/null || true)"
-    uid="$(loginctl show-session "$sid" -p User --value 2>/dev/null || true)"
+    ACTIVE="$(loginctl show-session "$SID" -p Active --value 2>/dev/null || true)"
+    REMOTE="$(loginctl show-session "$SID" -p Remote --value 2>/dev/null || true)"
+    TYPE="$(loginctl show-session "$SID" -p Type --value 2>/dev/null || true)"
+    CLASS="$(loginctl show-session "$SID" -p Class --value 2>/dev/null || true)"
+    USERID="$(loginctl show-session "$SID" -p User --value 2>/dev/null || true)"
 
-    [ "$active" = "yes" ] || continue
-    [ "$remote" = "no" ] || continue
-    [[ "$type" = "x11" || "$type" = "wayland" ]] || continue
-    [[ "$class" = "user" || "$class" = "greeter" ]] || continue
-    [ -n "$uid" ] || continue
-    [ -S "/run/user/$uid/bus" ] || continue
+    [ "$ACTIVE" = "yes" ] || continue
+    [ "$REMOTE" = "no" ] || continue
+    [[ "$TYPE" = "x11" || "$TYPE" = "wayland" ]] || continue
+    [[ "$CLASS" = "user" || "$CLASS" = "greeter" ]] || continue
+    [ -n "$USERID" ] || continue
+    [ -S "/run/user/$USERID/bus" ] || continue
 
-    sudo -u "#$uid" env \
-        XDG_RUNTIME_DIR="/run/user/$uid" \
-        DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$uid/bus" \
+    sudo -u "#$USERID" env \
+        XDG_RUNTIME_DIR="/run/user/$USERID" \
+        DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$USERID/bus" \
         /usr/bin/notify-send \
         "${NOTIFY_ARGS[@]}" \
         -- \
-        "$TITLE" "$BODY"
+        "$TITLE" "$BODY" >/dev/null 2>&1 || true
 done < <(loginctl list-sessions --no-legend)
 
 exit 0
