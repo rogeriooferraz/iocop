@@ -1,0 +1,84 @@
+#!/bin/bash
+
+# Copyright (c) 2026 Rogerio O. Ferraz <rogerio.o.ferraz@gmail.com>
+
+# MIT License
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+set -euo pipefail
+
+APP_NAME="iocop"
+TITLE="${1:-IOCOP Notification}"
+BODY="${2:-}"
+URGENCY="${3:-normal}"
+
+ICON_SVG="/usr/local/share/icons/hicolor/scalable/apps/iocop.svg"
+ICON_PNG="/usr/local/share/icons/hicolor/48x48/apps/iocop.png"
+FALLBACK_ICON="drive-harddisk"
+
+ICON=""
+BODY_IMAGE=""
+
+if [ -r "$ICON_SVG" ]; then
+    ICON="$ICON_SVG"
+    BODY_IMAGE="$ICON_SVG"
+elif [ -r "$ICON_PNG" ]; then
+    ICON="$ICON_PNG"
+    BODY_IMAGE="$ICON_PNG"
+else
+    ICON="$FALLBACK_ICON"
+fi
+
+NOTIFY_ARGS=(
+    --app-name="$APP_NAME"
+    --urgency="$URGENCY"
+    --icon="$ICON"
+)
+
+if [ -n "$BODY_IMAGE" ]; then
+    NOTIFY_ARGS+=(--hint="string:image-path:file://$BODY_IMAGE")
+fi
+
+while read -r sid _; do
+    [ -n "$sid" ] || continue
+
+    active="$(loginctl show-session "$sid" -p Active --value 2>/dev/null || true)"
+    remote="$(loginctl show-session "$sid" -p Remote --value 2>/dev/null || true)"
+    type="$(loginctl show-session "$sid" -p Type --value 2>/dev/null || true)"
+    class="$(loginctl show-session "$sid" -p Class --value 2>/dev/null || true)"
+    uid="$(loginctl show-session "$sid" -p User --value 2>/dev/null || true)"
+
+    [ "$active" = "yes" ] || continue
+    [ "$remote" = "no" ] || continue
+    [[ "$type" = "x11" || "$type" = "wayland" ]] || continue
+    [[ "$class" = "user" || "$class" = "greeter" ]] || continue
+    [ -n "$uid" ] || continue
+    [ -S "/run/user/$uid/bus" ] || continue
+
+    sudo -u "#$uid" env \
+        XDG_RUNTIME_DIR="/run/user/$uid" \
+        DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$uid/bus" \
+        /usr/bin/notify-send \
+        "${NOTIFY_ARGS[@]}" \
+        -- \
+        "$TITLE" "$BODY"
+done < <(loginctl list-sessions --no-legend)
+
+exit 0

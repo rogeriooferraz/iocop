@@ -1,0 +1,13 @@
+[Unit]
+Description=Watch kernel log for disk I/O failures and send GNOME notifications
+After=systemd-journald.service
+Wants=systemd-journald.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/sbin/iocop-journal-handler
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

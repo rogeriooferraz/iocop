@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="ringGrad" x1="6" y1="8" x2="42" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2f7dff"/>
+      <stop offset="50%" stop-color="#ff8a00"/>
+      <stop offset="100%" stop-color="#7a32ff"/>
+    </linearGradient>
+    <linearGradient id="shieldBlue" x1="14" y1="16" x2="24" y2="39" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2f8dff"/>
+      <stop offset="100%" stop-color="#1235b8"/>
+    </linearGradient>
+    <linearGradient id="shieldOrange" x1="24" y1="16" x2="34" y2="39" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ffb01f"/>
+      <stop offset="100%" stop-color="#ff5a00"/>
+    </linearGradient>
+    <linearGradient id="metal" x1="12" y1="11" x2="36" y2="18" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#eef4ff"/>
+      <stop offset="45%" stop-color="#a7b5d8"/>
+      <stop offset="100%" stop-color="#ffffff"/>
+    </linearGradient>
+    <linearGradient id="capTop" x1="11" y1="8" x2="37" y2="15" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2c3b7a"/>
+      <stop offset="100%" stop-color="#141b44"/>
+    </linearGradient>
+    <linearGradient id="capBrim" x1="13" y1="14" x2="35" y2="18" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0f1433"/>
+      <stop offset="50%" stop-color="#2e396f"/>
+      <stop offset="100%" stop-color="#0f1433"/>
+    </linearGradient>
+    <filter id="softGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="1.3" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- outer ring -->
+  <circle cx="24" cy="24" r="21.5" fill="none" stroke="url(#ringGrad)" stroke-width="1.8" opacity="0.95"/>
+  <circle cx="24" cy="24" r="18.8" fill="#0f1226" opacity="0.12"/>
+
+  <!-- side circuits -->
+  <g opacity="0.9" stroke-linecap="round" stroke-width="1.3" fill="none" filter="url(#softGlow)">
+    <g stroke="#2f7dff">
+      <path d="M8.5 21h3.6c1.2 0 1.7-1 1.7-1.8V18"/>
+      <path d="M9 26h4.8c1.1 0 1.4.7 1.4 1.4v1.6"/>
+      <circle cx="8.2" cy="21" r="1.4" fill="#2f7dff" stroke="none"/>
+      <circle cx="8.7" cy="26" r="1.2" fill="#2f7dff" stroke="none"/>
+      <rect x="14.3" y="16.6" width="1.9" height="1.9" rx="0.35" fill="#2f7dff" stroke="none"/>
+    </g>
+    <g stroke="#ff8a00">
+      <path d="M39.5 21h-3.6c-1.2 0-1.7-1-1.7-1.8V18"/>
+      <path d="M39 26h-4.8c-1.1 0-1.4.7-1.4 1.4v1.6"/>
+      <circle cx="39.8" cy="21" r="1.4" fill="#ff8a00" stroke="none"/>
+      <circle cx="39.3" cy="26" r="1.2" fill="#ff8a00" stroke="none"/>
+      <rect x="31.8" y="16.6" width="1.9" height="1.9" rx="0.35" fill="#ff8a00" stroke="none"/>
+    </g>
+  </g>
+
+  <!-- shield -->
+  <path d="M24 12.8
+           C20.6 14.7 17.4 15.5 14.2 16.2
+           V26.2
+           C14.2 31.8 18 36.1 24 39.6
+           C30 36.1 33.8 31.8 33.8 26.2
+           V16.2
+           C30.6 15.5 27.4 14.7 24 12.8Z"
+        fill="#10172f" opacity="0.9"/>
+  <path d="M24 13.6
+           C20.8 15.2 17.9 16.0 15 16.5
+           V25.8
+           C15 30.7 18.1 34.5 24 38.1
+           Z" fill="url(#shieldBlue)"/>
+  <path d="M24 13.6
+           C27.2 15.2 30.1 16.0 33 16.5
+           V25.8
+           C33 30.7 29.9 34.5 24 38.1
+           Z" fill="url(#shieldOrange)"/>
+  <path d="M24 12.8
+           C20.6 14.7 17.4 15.5 14.2 16.2
+           V26.2
+           C14.2 31.8 18 36.1 24 39.6
+           C30 36.1 33.8 31.8 33.8 26.2
+           V16.2
+           C30.6 15.5 27.4 14.7 24 12.8Z"
+        fill="none" stroke="url(#metal)" stroke-width="1.25" stroke-linejoin="round"/>
+
+  <!-- cap -->
+  <path d="M12.2 14.6
+           C14.7 10.7 19.6 9.2 24 9.2
+           C28.4 9.2 33.3 10.7 35.8 14.6
+           C33.4 15.5 30.8 15.5 28.6 15.2
+           H19.4
+           C17.2 15.5 14.6 15.5 12.2 14.6Z"
+        fill="url(#capTop)" stroke="#dce6ff" stroke-opacity="0.5" stroke-width="0.7" stroke-linejoin="round"/>
+  <path d="M13.2 15.2
+           C15.6 17.1 19.3 17.5 24 17.5
+           C28.7 17.5 32.4 17.1 34.8 15.2
+           C34.6 18.0 31.4 19.1 24 19.1
+           C16.6 19.1 13.4 18.0 13.2 15.2Z"
+        fill="url(#capBrim)" stroke="#0a0d1c" stroke-width="0.5"/>
+  <path d="M23 10.8l1-2.1 1 2.1 2.2.3-1.6 1.6.4 2.2-2-1.1-2 1.1.4-2.2-1.6-1.6z"
+        fill="#ffffff" opacity="0.95"/>
+
+  <!-- IO glyph -->
+  <rect x="18.3" y="20.2" width="2.8" height="10.4" rx="0.4" fill="#ffffff"/>
+  <path d="M25.2 21.2 L30.3 25.4 L25.2 29.6"
+        fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- tiny highlight -->
+  <path d="M16.1 18.3 C18.4 17.8 21.1 16.7 24 15.1" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="0.8" stroke-linecap="round"/>
+</svg>
